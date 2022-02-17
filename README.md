@@ -1,8 +1,6 @@
 # TinyApp Project
 
-This application is part of the assesment for a posistion I applied for.
-
-[Here is the link to the deployed server on heroku](https://young-lake-90503.herokuapp.com/register)
+This application is a part of the assesment for a position I applied for.
 
 ## Dependencies
 
@@ -14,4 +12,9 @@ This application is part of the assesment for a posistion I applied for.
 ## Getting Started
 
 - Install all dependencies (using the `npm install` command).
-- Run the development web server using the `npm start` command.
+- Run web server using the `npm start` command.
+- Run the tests using the `npm test`command
+
+## Use the Server
+
+- Go to http://localhost:8080/api/posts/[tag1],[tag2]/[sortedBy]/[order]

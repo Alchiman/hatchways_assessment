@@ -16,16 +16,7 @@ app.get("/api/ping", (req, res) => {
 // route 2
 app.get("/api/posts/:tags/:sortBy?/:direction?", (req, res) => {
   const { tags, sortBy, direction } = req.params;
-  const listOfSortParams = [
-    "id",
-    "author",
-    "authorId",
-    "likes",
-    "popularity",
-    "reads",
-    "tags",
-    undefined,
-  ];
+  const listOfSortParams = ["id", "reads", "likes", "popularity", undefined];
   const orderParams = ["asc", "desc", undefined];
 
   // handle unvalid sort params and order direction
