@@ -71,96 +71,54 @@ describe("back-end api assesment ", function () {
     });
     it("Should pass if all posts are unique by checking unique ids", function (done) {
       axios
-        .get("http://localhost:8080/api/posts/tech,health")
+        .get("http://localhost:8080/api/posts/health,tech")
         .then((res) => {
-          let post = res.data;
-          let postID = [];
-          let postObj = {};
-          let test = true;
+          const posts = res.data;
+          const postIds = new Set();
+          const ids = [];
           // Gets all post ids
-          for (let i = 0; i < post.length; i++) {
-            postID.push(post[i].id);
+          for (const post of posts) {
+            postIds.add(post.id);
+            ids.push(post.id);
           }
-          postID.forEach((blog) => {
-            postObj[blog] = postObj[blog] ? postObj[blog] + 1 : 1;
-          });
-          for (let key in postObj) {
-            if (postObj[key] > 1) {
-              test = false;
-            }
-          }
-          expect(test).to.equal(true);
+          expect(postIds.size).to.equal(posts.length);
         })
         .catch((error) => {
           console.log(error);
         });
       done();
     });
-    it("Should pass if all posts are unique by checking unique ids using all route parameters", function (done) {
+    it("Should pass if posts are sorted by the param", function (done) {
       axios
         .get("http://localhost:8080/api/posts/tech,health/likes/asc")
         .then((res) => {
-          let post = res.data;
-          let postID = [];
-          let postObj = {};
-          let test = true;
-          for (let i = 0; i < post.length; i++) {
-            postID.push(post[i].id);
-          }
-          postID.forEach((blog) => {
-            postObj[blog] = postObj[blog] ? postObj[blog] + 1 : 1;
-          });
-          for (let key in postObj) {
-            if (postObj[key] > 1) {
-              test = false;
+          let posts = res.data;
+          let likesChecker = 1;
+          for (let i = 0; i < posts.length; i++) {
+            if (i > 0 && posts[i].likes >= posts[i - 1].likes) {
+              likesChecker++;
             }
           }
-          expect(test).to.equal(true);
+          expect(likesChecker).to.equal(posts.length);
         })
         .catch((error) => {
           console.log(error);
         });
       done();
     });
-    it("Should pass if values are are sorted correctly", function (done) {
+    it("Should pass if values are are sorted in a correct direction", function (done) {
       axios
         .get("http://localhost:8080/api/posts/tech,history/likes/desc")
         .then((res) => {
-          let post = res.data;
-          let postLikes = [];
-          let test = true;
-          for (let i = 0; i < post.length; i++) {
-            postLikes.push(post[i].likes);
-          }
-          for (let i = 0; i < postLikes.length; i++) {
-            if (postLikes[i] < postLikes[i + 1]) {
-              test = false;
+          let posts = res.data;
+          // console.log(res.data);
+          let likesChecker = 1;
+          for (let i = 0; i < posts.length - 1; i++) {
+            if (posts[i].likes >= posts[i + 1].likes) {
+              likesChecker++;
             }
           }
-          expect(test).to.equal(true);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      done();
-    });
-    it("Should pass if the values are sorted correctly with the default parameters(when the user does not use them)", function (done) {
-      axios
-        .get("http://localhost:8080/api/posts/tech,history")
-        .then((res) => {
-          let post = res.data;
-          let postID = [];
-          let test = true;
-          for (let i = 0; i < post.length; i++) {
-            postID.push(post[i].id);
-          }
-
-          for (let i = 0; i < postID.length; i++) {
-            if (postID[i] > postID[i + 1]) {
-              test = false;
-            }
-          }
-          expect(test).to.equal(true);
+          expect(likesChecker).to.equal(posts.length);
         })
         .catch((error) => {
           console.log(error);
